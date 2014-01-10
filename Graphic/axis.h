@@ -1,6 +1,7 @@
 #ifndef __AXIS_H
 #define __AXIS_H
 
+#include <inttypes.h>
 #include <vector>
 #include "basic.h"
 
@@ -16,10 +17,12 @@ public:
 	inline class point p(void) const {return scrP;}
 	inline void setA(const class angle a) {scrA = a;}
 	inline void setP(const class point p) {scrP = p;}
+	inline void setBGC(const uint32_t c) {bgc = c;}
 	inline void showAxis(const float disp) {display = disp;}
 	inline virtual void show(void);
 
 private:
+	uint32_t bgc;
 	float display;
 	class angle scrA;
 	class point scrP;
@@ -44,13 +47,18 @@ inline axis::axis(class axis *parent, const class point p, const class angle a, 
 	this->parent = parent;
 	scrA = a;
 	scrP = p;
+	bgc = 0;
 	display = disp;
 }
 
 inline void axis::show(void)
 {
 	if ((int)parent == -1)
-		scrBuffClean();
+		for (int x = 0; x < SCRW; x++)
+			for (int y = 0; y < SCRH; y++) {
+				scrBuff[x][y].deep = 1;
+				scrBuff[x][y].colour = bgc;
+			}
 	if (display > 1) {
 		object::showDotLine(object::convPoint(point(), this), object::convPoint(point(display, 0, 0), this), 0xFF0000);
 		object::showDotLine(object::convPoint(point(), this), object::convPoint(point(0, display, 0), this), 0x00FF00);

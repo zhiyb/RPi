@@ -9,6 +9,7 @@ class gString: public object
 public:
 	inline gString(class axis *parent = 0, class point p = point(), class angle a = angle(), uint32_t c = 0, std::string s = 0, float z = 1);
 	inline void set(class point p = point(), class angle a = angle(), uint32_t c = 0, std::string s = 0, float z = 1);
+	inline void setString(const std::string& s) {str = s;}
 	inline void setColour(const uint32_t c = 0) {colour = c;}
 	inline void show(void);
 	inline void showChar(const char c, const int x);
