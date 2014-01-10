@@ -9,7 +9,7 @@ CFLAGS	= -g -I. -I./Graphic -I./TFT -Wall -Wsign-compare -Werror -O3
 LDFLAGS	= -g -L./Graphic -lGraphic -L./TFT -lTFT -lbcm2835
 
 .PHONE: all
-all: subdirs $(TARGET)
+all: $(TARGET)
 
 # Subdirectories
 
@@ -19,8 +19,8 @@ subdirs: $(SUBDIRS)
 $(SUBDIRS):
 	$(MAKE) -C $@
 
-$(TARGET): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+$(TARGET): subdirs $(OBJS)
+	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
