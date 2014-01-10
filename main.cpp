@@ -62,7 +62,7 @@ int main(void)
 	while (true) {
 		gRoot->show();
 		tft.update();
-		newAxis->setA(angle(newAxis->a().x() - 0.1, newAxis->a().y() - 0.1, newAxis->a().z() - 0.1));
+		newAxis->setA(angle(newAxis->a().x() + 0.1, newAxis->a().y() + 0.1, newAxis->a().z() + 0.1));
 		subAxis->setA(angle(subAxis->a().x() - 0.1, subAxis->a().y() - 0.1, subAxis->a().z() - 0.1));
 		scrAxis->setA(angle(0.5, scrAxis->a().y() + 0.05, 0));
 		cube->setColour(rand() % 0x1000000);
