@@ -1,13 +1,18 @@
 #include <iostream>
+#include <string>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <inttypes.h>
 #include <TFT/tft.h>
 #include <TFT/conv.h>
+#include <Graphic/scrbuff.h>
 #include <Graphic/cubeframe.h>
 #include <Graphic/string.h>
 #include <Graphic/sphereframe.h>
 #include <time.h>
+
+#define PICS	"/mnt/NFS/files/capture/"
 
 void init(void)
 {
@@ -63,6 +68,7 @@ int main(void)
 	scrAxis->setP(point(160, 120, -500));
 	scrAxis->setA(angle(0.5, 0, 0));
 	scrAxis->showAxis(150);
+	//int i = 0;
 	while (true) {
 		time_t timep;
 		time(&timep);
@@ -70,6 +76,9 @@ int main(void)
 		time.resize(8);
 		str->setString(time);
 		gRoot->show();
+		/*char path[std::char_traits<char>::length(PICS ".bmp") + 7];
+		sprintf(path, PICS "%06d.bmp", i++);
+		scrCapture(path);*/
 		tft.update();
 		newAxis->setA(angle(newAxis->a().x() + 0.1, newAxis->a().y() + 0.1, newAxis->a().z() + 0.1));
 		subAxis->setA(angle(subAxis->a().x() - 0.1, subAxis->a().y() - 0.1, subAxis->a().z() - 0.1));

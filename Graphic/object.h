@@ -2,6 +2,7 @@
 #define __OBJECT_H
 
 #include <inttypes.h>
+#include "basic.h"
 
 class object
 {

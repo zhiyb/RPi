@@ -13,4 +13,6 @@ struct scrBuffStruct {
 
 extern scrBuffStruct scrBuff[SCRW][SCRH];
 
+void scrCapture(const char *path);
+
 #endif
