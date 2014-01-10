@@ -1,12 +1,12 @@
 SRC	= main.cpp
 SUBDIRS	= Graphic TFT
 TARGET	= HelloWorld
-
-PREFIX	= arm-linux-gnueabihf-
-CC	= $(PREFIX)g++
 OBJS	= $(subst .c,.o,$(subst .cpp,.o,$(SRC)))
-CFLAGS	= -g -I. -I./Graphic -I./TFT -Wall -Wsign-compare -Werror -O3
-LDFLAGS	= -g -L./Graphic -lGraphic -L./TFT -lTFT -lbcm2835
+
+PREFIX	:= arm-linux-gnueabihf-
+CC	:= $(PREFIX)g++
+CFLAGS	:= -g -I. -I./Graphic -I./TFT -Wall -Wsign-compare -Werror -O3
+LDFLAGS	:= -g -L./Graphic -lGraphic -L./TFT -lTFT -lbcm2835
 
 .PHONE: all
 all: $(TARGET)
@@ -35,7 +35,7 @@ clean:
 
 .PHONE: run
 run: all
-	ssh 192.168.3.24 'killall $(TARGET); /mnt/NFS$(PWD)/$(TARGET)'
+	ssh 192.168.3.24 'killall $(TARGET) &> /dev/null; /mnt/NFS$(PWD)/$(TARGET)'
 
 -include $(OBJS:.o=.d)
 

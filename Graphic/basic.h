@@ -22,6 +22,26 @@ private:
 	float _x, _y, _z;
 };
 
+class angle
+{
+public:
+	inline angle(const float _x = 0, const float _y = 0, \
+			const float _z = 0);
+	inline void setX(const float v) {_x = v;}
+	inline void setY(const float v) {_y = v;}
+	inline void setZ(const float v) {_z = v;}
+	inline void set(const float _x = 0, const float _y = 0, \
+			const float _z = 0);
+	inline float x(void) const {return _x;}
+	inline float y(void) const {return _y;}
+	inline float z(void) const {return _z;}
+
+private:
+	float _x, _y, _z;
+};
+
+// *** class point ***
+
 inline point::point(const float _x, const float _y, const float _z)
 {
 	set(_x, _y, _z);
@@ -66,23 +86,7 @@ static inline std::ostream& operator<<(std::ostream &out, const class point& p)
 	return out;
 }
 
-class angle
-{
-public:
-	inline angle(const float _x = 0, const float _y = 0, \
-			const float _z = 0);
-	inline void setX(const float v) {_x = v;}
-	inline void setY(const float v) {_y = v;}
-	inline void setZ(const float v) {_z = v;}
-	inline void set(const float _x = 0, const float _y = 0, \
-			const float _z = 0);
-	inline float x(void) const {return _x;}
-	inline float y(void) const {return _y;}
-	inline float z(void) const {return _z;}
-
-private:
-	float _x, _y, _z;
-};
+// *** class angle ***
 
 inline angle::angle(const float _x, const float _y, const float _z)
 {

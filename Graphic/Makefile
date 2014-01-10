@@ -1,12 +1,12 @@
-SRC	= axis.cpp scrbuff.cpp
+SRC	= basic.cpp scrbuff.cpp ascii.c
 SUBDIRS	= 
 TARGET	= Graphic
-
-PREFIX	= arm-linux-gnueabihf-
-CC	= $(PREFIX)g++
-AR	= $(PREFIX)ar
 OBJS	= $(subst .c,.o,$(subst .cpp,.o,$(SRC)))
-CFLAGS	= -g -I. -Wall -Wsign-compare -Werror -O3
+
+PREFIX	:= arm-linux-gnueabihf-
+CC	:= $(PREFIX)g++
+AR	:= $(PREFIX)ar
+CFLAGS	:= -g -I. -Wall -Wsign-compare -Werror -O3
 
 ARFLAGS	= rcs
 

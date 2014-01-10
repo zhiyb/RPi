@@ -24,6 +24,7 @@ public:
 			const class point p3 = point(), \
 			const class point p4 = point(), \
 			const uint32_t c = 0);
+	inline void setColour(const uint32_t c = 0);
 
 private:
 	uint32_t colour;
@@ -91,6 +92,12 @@ inline void cubeFrame::set(const class point p1, const class point p2, \
 	edge[9]->set(p2 + p3 - p1, p4 + p2 - p1 + p3 - p1, c);
 	edge[10]->set(p4 + p3 - p1, p4 + p2 - p1 + p3 - p1, c);
 	edge[11]->set(p4 + p2 - p1, p4 + p2 - p1 + p3 - p1, c);
+}
+
+inline void cubeFrame::setColour(const uint32_t c)
+{
+	for (int i = 0; i < 12; i++)
+		edge[i]->setColour(c);
 }
 
 #endif

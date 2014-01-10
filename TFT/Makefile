@@ -1,12 +1,12 @@
 SRC	= ascii.c gpio.c tft.cpp
 SUBDIRS	= 
 TARGET	= TFT
-
-PREFIX	= arm-linux-gnueabihf-
-CC	= $(PREFIX)g++
-AR	= $(PREFIX)ar
 OBJS	= $(subst .c,.o,$(subst .cpp,.o,$(SRC)))
-CFLAGS	= -g -I. -I.. -Wall -Wsign-compare -Werror -O3
+
+PREFIX	:= arm-linux-gnueabihf-
+CC	:= $(PREFIX)g++
+AR	:= $(PREFIX)ar
+CFLAGS	:= -g -I. -I.. -Wall -Wsign-compare -Werror -O3
 
 ARFLAGS	= rcs
 

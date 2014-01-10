@@ -14,6 +14,7 @@ public:
 			const uint32_t c = 0);
 	inline void set(const class point p1, const class point p2, \
 			const uint32_t c);
+	inline void setColour(const uint32_t c = 0) {colour = c;}
 	inline void show(void);
 
 private:
@@ -40,7 +41,7 @@ inline void line::set(const class point p1, const class point p2, \
 inline void line::show(void)
 {
 	//std::cout << "line->show()" << std::endl;
-	showLine(convPoint(parent, p1), convPoint(parent, p2), colour);
+	showLine(convPoint(p1, parent), convPoint(p2, parent), colour);
 }
 
 #endif

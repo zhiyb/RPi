@@ -15,7 +15,7 @@ protected:
 	static inline void showPoint(const class point& p, const uint32_t c);
 	static inline void showLine(const class point& p1, const class point& p2, const uint32_t c);
 	static inline void showDotLine(const class point& p1, const class point& p2, const uint32_t c);
-	static inline class point convPoint(const class axis *org = 0, const class point& p = point());
+	static inline class point convPoint(const class point& p = point(), const class axis *org = 0, const class axis *to = 0);
 
 	class axis *parent;
 };
@@ -95,10 +95,12 @@ inline void object::showDotLine(const class point& p1, const class point& p2, co
 	showPoint(p2, c);
 }
 
-inline class point object::convPoint(const class axis *org, const class point& p)
+inline class point object::convPoint(const class point& p, const class axis *org, const class axis *to)
 {
 	if (org == 0)
 		org = scrAxis;
+	if (to == 0)
+		to = gRoot;
 #define X	(p.x())
 #define Y	(p.y())
 #define Z	(p.z())
@@ -119,7 +121,10 @@ inline class point object::convPoint(const class axis *org, const class point& p
 #undef RX
 #undef RY
 #undef RZ
-	return point(x, y, z);
+	point res(x, y, z);
+	if (org->parent != gRoot)
+		res = convPoint(res, org->parent);
+	return res;
 }
 
 #endif
