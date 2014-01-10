@@ -90,7 +90,7 @@ inline void object::showDotLine(const class point& p1, const class point& p2, co
 {
 	float dx = p2.x() - p1.x(), dy = p2.y() - p1.y(), dz = p2.z() - p1.z();
 	float dmax = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-	for (float i = 0; i < dmax; i += 3)
+	for (float i = 0; i < dmax; i += 4)
 		showPoint(point(p1.x() + dx * i / dmax, p1.y() + dy * i / dmax, p1.z() + dz * i / dmax), c);
 	showPoint(p2, c);
 }
@@ -105,6 +105,7 @@ inline class point object::convPoint(const class axis *org, const class point& p
 #define RX	(org->a().x())
 #define RY	(org->a().y())
 #define RZ	(org->a().z())
+	// Rotation matrix (http://en.wikipedia.org/wiki/Rotation_matrix)
 	/*float x = org->p().x() + (cos(RY) * cos(RZ)) * X +					(-cos(RY) * sin(RZ)) * Y +				(sin(RY)) * Z;
 	float y = org->p().y() + (cos(RZ) * sin(RX) * sin(RY) + cos(RX) * sin(RZ)) * X +	(cos(RX) * cos(RZ) - sin(RX) * sin(RY) * sin(RZ)) * Y +	(-cos(RY) * sin(RX)) * Z;
 	float z = org->p().z() + (-cos(RX) * cos(RZ) * sin(RY) + sin(RX) * sin(RZ)) * X +	(cos(RZ) * sin(RX) + cos(RX) * sin(RY) * sin(RZ)) * Y +	(cos(RX) * cos(RY)) * Z;*/

@@ -7,7 +7,13 @@
 class cubeFrame: public object
 {
 public:
-	inline cubeFrame(class axis *parent, \
+	// Cuboid
+	inline cubeFrame(class axis *parent = 0, \
+			const class point d1 = point(), \
+			const class point d2 = point(), \
+			const uint32_t c = 0);
+	// Parallelepiped
+	inline cubeFrame(class axis *parent = 0, \
 			const class point p1 = point(), \
 			const class point p2 = point(), \
 			const class point p3 = point(), \
@@ -26,6 +32,24 @@ private:
 };
 
 #include "line.h"
+
+inline cubeFrame::cubeFrame(class axis *parent, const class point d1, \
+		const class point d2, const uint32_t c): object(parent)
+{
+	edge[0] = new class line(parent);
+	edge[1] = new class line(parent);
+	edge[2] = new class line(parent);
+	edge[3] = new class line(parent);
+	edge[4] = new class line(parent);
+	edge[5] = new class line(parent);
+	edge[6] = new class line(parent);
+	edge[7] = new class line(parent);
+	edge[8] = new class line(parent);
+	edge[9] = new class line(parent);
+	edge[10] = new class line(parent);
+	edge[11] = new class line(parent);
+	set(d1, point(d1.x(), d1.y(), d2.z()), point(d1.x(), d2.y(), d1.z()), point(d2.x(), d1.y(), d1.z()), c);
+}
 
 inline cubeFrame::cubeFrame(class axis *parent, const class point p1, \
 		const class point p2, const class point p3, \
