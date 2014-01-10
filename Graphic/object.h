@@ -15,7 +15,8 @@ protected:
 	static inline void showPoint(const class point& p, const uint32_t c);
 	static inline void showLine(const class point& p1, const class point& p2, const uint32_t c);
 	static inline void showDotLine(const class point& p1, const class point& p2, const uint32_t c);
-	static inline class point convPoint(const class point& p = point(), const class axis *org = 0, const class axis *to = 0);
+	static inline class point convPoint(const class point& p = point(), const class angle& a = angle());
+	static inline class point convPoint(const class point& p = point(), const class axis *from = 0, const class axis *to = 0);
 
 	class axis *parent;
 };
@@ -95,35 +96,25 @@ inline void object::showDotLine(const class point& p1, const class point& p2, co
 	showPoint(p2, c);
 }
 
-inline class point object::convPoint(const class point& p, const class axis *org, const class axis *to)
+inline class point object::convPoint(const class point& p, const class angle& a)
 {
-	if (org == 0)
-		org = scrAxis;
+	// Rotation matrix (http://en.wikipedia.org/wiki/Rotation_matrix)
+	float cosrx = cos(a.x()), cosry = cos(a.y()), cosrz = cos(a.z()), sinrx = sin(a.x()), sinry = sin(a.y()), sinrz = sin(a.z());
+	float x = (cosry * cosrz) * p.x() +				(-cosry * sinrz) * p.y() +				(sinry) * p.z();
+	float y = (cosrz * sinrx * sinry + cosrx * sinrz) * p.x() +	(cosrx * cosrz - sinrx * sinry * sinrz) * p.y() +	(-cosry * sinrx) * p.z();
+	float z = (-cosrx * cosrz * sinry + sinrx * sinrz) * p.x() +	(cosrz * sinrx + cosrx * sinry * sinrz) * p.y() +	(cosrx * cosry) * p.z();
+	return point(x, y, z);
+}
+
+inline class point object::convPoint(const class point& p, const class axis *from, const class axis *to)
+{
+	if (from == 0)
+		from = scrAxis;
 	if (to == 0)
 		to = gRoot;
-#define X	(p.x())
-#define Y	(p.y())
-#define Z	(p.z())
-#define RX	(org->a().x())
-#define RY	(org->a().y())
-#define RZ	(org->a().z())
-	// Rotation matrix (http://en.wikipedia.org/wiki/Rotation_matrix)
-	/*float x = org->p().x() + (cos(RY) * cos(RZ)) * X +					(-cos(RY) * sin(RZ)) * Y +				(sin(RY)) * Z;
-	float y = org->p().y() + (cos(RZ) * sin(RX) * sin(RY) + cos(RX) * sin(RZ)) * X +	(cos(RX) * cos(RZ) - sin(RX) * sin(RY) * sin(RZ)) * Y +	(-cos(RY) * sin(RX)) * Z;
-	float z = org->p().z() + (-cos(RX) * cos(RZ) * sin(RY) + sin(RX) * sin(RZ)) * X +	(cos(RZ) * sin(RX) + cos(RX) * sin(RY) * sin(RZ)) * Y +	(cos(RX) * cos(RY)) * Z;*/
-	float cosrx = cos(RX), cosry = cos(RY), cosrz = cos(RZ), sinrx = sin(RX), sinry = sin(RY), sinrz = sin(RZ);
-	float x = org->p().x() + (cosry * cosrz) * X +				(-cosry * sinrz) * Y +				(sinry) * Z;
-	float y = org->p().y() + (cosrz * sinrx * sinry + cosrx * sinrz) * X +	(cosrx * cosrz - sinrx * sinry * sinrz) * Y +	(-cosry * sinrx) * Z;
-	float z = org->p().z() + (-cosrx * cosrz * sinry + sinrx * sinrz) * X +	(cosrz * sinrx + cosrx * sinry * sinrz) * Y +	(cosrx * cosry) * Z;
-#undef X
-#undef Y
-#undef Z
-#undef RX
-#undef RY
-#undef RZ
-	point res(x, y, z);
-	if (org->parent != gRoot)
-		res = convPoint(res, org->parent);
+	point res = convPoint(p, from->a()) + from->p();
+	if (from->parent != gRoot)
+		res = convPoint(res, from->parent);
 	return res;
 }
 
