@@ -379,7 +379,7 @@ inline void tfthw::triangle(const class point p1, const class point p2, \
 
 inline void tfthw::update(void)
 {
-	all();
+	//all();
 	cmd(0x2C);			// Memory Write
 	for (int y = SCRH - 1; y >= 0; y--)
 		for (int x = 0; x != SCRW; x++) {
