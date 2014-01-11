@@ -41,20 +41,11 @@ int main(void)
 	(new cubeFrame(subAxis, point(-5, -5, -5), point(-20, -20, -20), 0xFFFFFF))->showAxis(100);
 	(new cubeFrame(subAxis, point(30, 30, 30), point(-60, -60, -60), 0x3F3F3F))->showAxis(100);
 	(new gString(subAxis, point(0, 30, 0), angle(0, 0, 1.57079), 0x66CCFF, "Hello, world!"))->showAxis(100);
-	//new sphereFrame(subAxis, point(0, 0, 0), 40, 0x66CCFF);
 
-/*	new cubeFrame(0, point(5, 5, 5), point(45, 45, 45), 0x7F7F7F);
-	new cubeFrame(0, point(5, -5, 5), point(45, -45, 45), 0xFF0000);
-	new cubeFrame(0, point(-5, 5, 5), point(-45, 45, 45), 0x00FF00);
-	new cubeFrame(0, point(5, 5, -5), point(45, 45, -45), 0x0000FF);
-	new cubeFrame(0, point(-5, -5, 5), point(-45, -45, 45), 0xFF00FF);
-	new cubeFrame(0, point(5, -5, -5), point(45, -45, -45), 0x00FFFF);
-	new cubeFrame(0, point(-5, 5, -5), point(-45, 45, -45), 0xFFFF00);
-	new cubeFrame(0, point(-5, -5, -5), point(-45, -45, -45), 0xFFFFFF);
-	new cubeFrame(0, point(55, 55, 55), point(-55, -55, -55), 0x3F3F3F);
-*/	class sphereFrame *sphere = new sphereFrame(0, point(0, 0, 0), 50, 0x66CCFF);
+	class sphereFrame *sphere = new sphereFrame(0, point(0, 0, 0), 50, 0x66CCFF);
 	class gString *str = new gString(0, point(-100, 80, 0), angle(0, 0, 0), 0x66CCFF, "Hello, world!", 4);
 	(new sphereFrame(str, point(-10, 40, 0), 10, 0xFF0000))->showAxis(150);
+	(new sphereFrame(str, point(-10, -8, 0), 10, 0x0000FF))->showAxis(150);
 	class cubeFrame *cube;
 	(new cubeFrame((new cubeFrame((new cubeFrame((cube = new cubeFrame((new cubeFrame((new cubeFrame(0, \
 			point(10, 10, 10), point(-10, -10, -10), 0xFF0000))->showAxis(50), \
@@ -63,8 +54,7 @@ int main(void)
 			point(10, 10, 10), point(-10, -10, -10), 0xFFFF00))->showAxis(50), \
 			point(10, 10, 10), point(-10, -10, -10), 0x00FFFF))->showAxis(50), \
 			point(10, 10, 10), point(-10, -10, -10), 0xFF00FF))->showAxis(50);
-	//gAxis->setTPoint(point(160, 120, -200));
-	gAxis->setTAngle(angle(0.5, 0, 0));
+	gAxis->setTPoint(point(160, 120, -500));
 	gAxis->showAxis(0);
 	sphere->showAxis(150);
 	str->showAxis(150);
