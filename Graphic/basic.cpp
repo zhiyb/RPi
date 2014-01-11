@@ -1,5 +1,5 @@
-#include "axis.h"
 #include "basic.h"
+#include "object.h"
 
-class axis *gRoot = new axis((class axis *)-1);
-class axis *scrAxis = new axis(0, point(160, 120, -200), angle());
+class object *gRoot = new object((class object *)-1);
+class object *gAxis = new object(gRoot, point(160, 120, -200));

@@ -8,11 +8,11 @@ const char *header = "\x42\x4D\x36\x84\x03\x00\x00\x00\x00\x00\x36\x00\x00\x00\x
 
 using namespace std;
 
-void scrCapture(const char *path)
+void scr::scrCapture(const char *path)
 {
 	ofstream file(path, ios::out | ios::binary);
 	if (!file.is_open()) {
-		std::cerr << "Error openning file " << path << std::endl;
+		cerr << "Error openning file " << path << endl;
 		return;
 	}
 	file.write(header, 54);

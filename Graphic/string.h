@@ -7,25 +7,20 @@
 class gString: public object
 {
 public:
-	inline gString(class axis *parent = 0, class point p = point(), class angle a = angle(), uint32_t c = 0, std::string s = 0, float z = 1);
+	inline gString(class object *parent = 0, class point p = point(), class angle a = angle(), uint32_t c = 0, std::string s = 0, float z = 1);
 	inline void set(class point p = point(), class angle a = angle(), uint32_t c = 0, std::string s = 0, float z = 1);
 	inline void setString(const std::string& s) {str = s;}
-	inline void setColour(const uint32_t c = 0) {colour = c;}
-	inline void show(void);
-	inline void showChar(const char c, const int x);
+	inline void paintChar(const char c, const int x);
+	inline void paint(void);
 
 private:
 	float zoom;
-	uint32_t colour;
 	std::string str;
-	class point p;
-	class angle a;
 };
 
-#include <iostream>
 #include "ascii.h"
 
-inline gString::gString(class axis *parent, class point p, class angle a, uint32_t c, std::string s, float z): object(parent)
+inline gString::gString(class object *parent, class point p, class angle a, uint32_t c, std::string s, float z): object(parent)
 {
 	set(p, a, c, s, z);
 }
@@ -33,25 +28,25 @@ inline gString::gString(class axis *parent, class point p, class angle a, uint32
 inline void gString::set(class point p, class angle a, uint32_t c, std::string s, float z)
 {
 	str = s;
-	colour = c;
 	zoom = z;
-	this->p = p;
-	this->a = a;
+	setColour(c);
+	setTPoint(p);
+	setTAngle(a);
 }
 
-inline void gString::showChar(const char c, const int x)
+inline void gString::paintChar(const char c, const int x)
 {
+	using namespace scr;
 	for (int dy = 0; dy < FONT_H * zoom; dy++)
 		for (int dx = 0; dx < FONT_W * zoom; dx++)
 			if (ascii[c - ' '][FONT_H - 1 - (int)(dy / zoom)] & (0x80 >> (int)(dx / zoom)))
-				showPoint(convPoint(p + convPoint(point(x + dx, dy, 0), a), parent), colour);
+				showPoint(transform(point(x + dx, dy, 0)), colour);
 }
 
-inline void gString::show(void)
+inline void gString::paint(void)
 {
-	//std::cout << str << std::endl;
-	for (std::string::size_type i = 0, x = 0; i != str.size(); i++, x += FONT_W * zoom)
-		showChar(str[i], x);
+	for (std::string::size_type i = 0; i != str.size(); i++)
+		paintChar(str[i], i * FONT_W * zoom);
 }
 
 #endif

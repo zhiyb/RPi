@@ -1,10 +1,12 @@
 SRC	= main.cpp
 SUBDIRS	= Graphic TFT
 TARGET	= HelloWorld
+STRIP	= true
 OBJS	= $(subst .c,.o,$(subst .cpp,.o,$(SRC)))
 
 PREFIX	:= arm-linux-gnueabihf-
 CC	:= $(PREFIX)g++
+STRIP	+= && $(PREFIX)strip
 CFLAGS	:= -g -I. -I./Graphic -I./TFT -Wall -Wsign-compare -Werror -O3
 LDFLAGS	:= -g -L./Graphic -lGraphic -L./TFT -lTFT -lbcm2835
 
@@ -21,6 +23,7 @@ $(SUBDIRS):
 
 $(TARGET): subdirs $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
+	$(STRIP) $@ || true
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)

@@ -2,99 +2,69 @@
 #define __OBJECT_H
 
 #include <inttypes.h>
+#include <vector>
 #include "basic.h"
 
 class object
 {
-	friend class axis;
-
 public:
-	inline object(class axis *parent = 0);
-	virtual inline void show(void);
+	inline object(class object *parent = 0, const class point& p = point(), const class angle& a = angle(), const float disp = 0);
+	inline void show(void);
+	inline class object *showAxis(const float disp = 0) {display = disp; return this;}
+	inline class object *insert(class object *o) {obj.push_back(o); return this;}
+	virtual inline void setColour(const uint32_t c = 0) {colour = c;}
+	virtual inline void setT(const class point& p = point(), const class angle& a = angle()) {tPoint = p; tAngle = a;}
+	virtual inline void setTPoint(const class point& p = point()) {tPoint = p;}
+	virtual inline void setTAngle(const class angle& a = angle()) {tAngle = a;}
+	virtual inline void set(const class point& p = point(), const class angle& a = angle()) {setT(p, a);}
+	virtual inline void setPoint(const class point& p = point()) {setTPoint(p);}
+	virtual inline void setAngle(const class angle& a = angle()) {setTAngle(a);}
+	virtual inline void setP(const class point& p = point()) {setTPoint(p);}
+	virtual inline void setA(const class angle& a = angle()) {setTAngle(a);}
+	virtual inline uint32_t c(void) const {return colour;}
+	virtual inline class point p(void) const {return tPoint;}
+	virtual inline class angle a(void) const {return tAngle;}
+	virtual inline void paint(void) {}
 
 protected:
-	static inline void showPoint(const class point& p, const uint32_t c);
-	static inline void showLine(const class point& p1, const class point& p2, const uint32_t c);
-	static inline void showDotLine(const class point& p1, const class point& p2, const uint32_t c);
+	virtual inline class point transform(const class point& p = point());
 	static inline class point convPoint(const class point& p = point(), const class angle& a = angle());
-	static inline class point convPoint(const class point& p = point(), const class axis *from = 0, const class axis *to = 0);
 
-	class axis *parent;
+	uint32_t colour;
+	float display;
+	class object *parent;
+	class point tPoint;
+	class angle tAngle;
+
+private:
+	std::vector<class object *> obj;
 };
 
-#include <iostream>
+extern class object *gRoot;
+extern class object *gAxis;
+
 #include <stdlib.h>
 #include <math.h>
-#include "axis.h"
+#include "scrbuff.h"
 
-inline object::object(class axis *parent)
+inline object::object(class object *parent, const class point& p, const class angle& a, const float disp)
 {
 	if (parent == 0)
-		parent = scrAxis;
+		parent = gAxis;
+	if ((int)parent != -1)
+		parent->insert(this);
 	this->parent = parent;
-	parent->insert(this);
+	tPoint = p;
+	tAngle = a;
+	display = disp;
+	colour = 0;
 }
 
-inline void object::show(void)
+inline class point object::transform(const class point& p)
 {
-	//std::cout << "object->show()" << std::endl;
-}
-
-inline void object::showPoint(const class point& p, const uint32_t c)
-{
-	int x = p.x() + 0.5, y = p.y() + 0.5, z = p.z() + 0.5;
-	if (x >= SCRW || y >= SCRH || x < 0 || y < 0)
-		return;
-	if (z > 0 || (scrBuff[x][y].deep <= 0 && scrBuff[x][y].deep > z))
-		return;
-	scrBuff[x][y].deep = z;
-	scrBuff[x][y].colour = c;
-}
-
-inline void object::showLine(const class point& p1, const class point& p2, const uint32_t c)
-{
-#if 0
-	float dz = p2.z() - p1.z();
-
-	// Bresenham's line algorithm (http://en.wikipedia.org/wiki/Bresenham's_line_algorithm)
-	int x0 = p1.x() + 0.5, x1 = p2.x() + 0.5, y0 = p1.y() + 0.5, y1 = p2.y() + 0.5;
-	int dx = abs(x1 - x0), dy = abs(y1 - y0);
-	int sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx - dy;
-
-	while (true) {
-		showPoint(point(x0, y0, p1.z() + dz * abs(x1 - x0) / dx), c);
-		if (x0 == x1 && y0 == y1)
-			break;
-		int e2 = 2 * err;
-		if (e2 > -dy) {
-			err = err - dy;
-			x0 = x0 + sx;
-		}
-		if (x0 == x1 && y0 == y1) {
-			showPoint(point(x0, y0, p1.z() + dz * abs(x1 - x0) / dx), c);
-			break;
-		}
-		if (e2 < dx) {
-			err = err + dx;
-			y0 = y0 + sy;
-		}
-	}
-#else
-	float dx = p2.x() - p1.x(), dy = p2.y() - p1.y(), dz = p2.z() - p1.z();
-	float dmax = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-	for (float i = 0; i < dmax; i += 0.75)
-		showPoint(point(p1.x() + dx * i / dmax, p1.y() + dy * i / dmax, p1.z() + dz * i / dmax), c);
-	showPoint(p2, c);
-#endif
-}
-
-inline void object::showDotLine(const class point& p1, const class point& p2, const uint32_t c)
-{
-	float dx = p2.x() - p1.x(), dy = p2.y() - p1.y(), dz = p2.z() - p1.z();
-	float dmax = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-	for (float i = 0; i < dmax; i += 4)
-		showPoint(point(p1.x() + dx * i / dmax, p1.y() + dy * i / dmax, p1.z() + dz * i / dmax), c);
-	showPoint(p2, c);
+	if ((int)parent == -1)
+		return p;
+	return parent->transform(tPoint + convPoint(p, tAngle));
 }
 
 inline class point object::convPoint(const class point& p, const class angle& a)
@@ -107,16 +77,23 @@ inline class point object::convPoint(const class point& p, const class angle& a)
 	return point(x, y, z);
 }
 
-inline class point object::convPoint(const class point& p, const class axis *from, const class axis *to)
+inline void object::show(void)
 {
-	if (from == 0)
-		from = scrAxis;
-	if (to == 0)
-		to = gRoot;
-	point res = convPoint(p, from->a()) + from->p();
-	if (from->parent != gRoot)
-		res = convPoint(res, from->parent);
-	return res;
+	using namespace scr;
+	if ((int)parent == -1)
+		for (int x = 0; x < SCRW; x++)
+			for (int y = 0; y < SCRH; y++) {
+				scrBuff[x][y].deep = 1;
+				scrBuff[x][y].colour = colour;
+			}
+	if (display > 1) {
+		showDotLine(transform(), transform(point(display, 0, 0)), 0xFF0000);
+		showDotLine(transform(), transform(point(0, display, 0)), 0x00FF00);
+		showDotLine(transform(), transform(point(0, 0, display)), 0x0000FF);
+	}
+	for (std::vector<class object *>::size_type i = 0; i != obj.size(); i++)
+		obj[i]->show();
+	paint();
 }
 
 #endif
