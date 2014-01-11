@@ -2,16 +2,18 @@
 #define __OBJECT_H
 
 #include <inttypes.h>
-#include <vector>
+#include <list>
 #include "basic.h"
 
 class object
 {
 public:
 	inline object(class object *parent = 0, const class point& p = point(), const class angle& a = angle(), const float disp = 0);
+	inline virtual ~object(void);
 	inline void show(void);
 	inline class object *showAxis(const float disp = 0) {display = disp; return this;}
 	inline class object *insert(class object *o) {obj.push_back(o); return this;}
+	inline class object *remove(class object *o) {obj.remove(o); return this;}
 	virtual inline void setColour(const uint32_t c = 0) {colour = c;}
 	virtual inline void setT(const class point& p = point(), const class angle& a = angle()) {tPoint = p; tAngle = a;}
 	virtual inline void setTPoint(const class point& p = point()) {tPoint = p;}
@@ -37,7 +39,7 @@ protected:
 	class angle tAngle;
 
 private:
-	std::vector<class object *> obj;
+	std::list<class object *> obj;
 };
 
 extern class object *gRoot;
@@ -58,6 +60,13 @@ inline object::object(class object *parent, const class point& p, const class an
 	tAngle = a;
 	display = disp;
 	colour = 0;
+}
+
+inline object::~object(void)
+{
+	while (!obj.empty())
+		obj.pop_back();
+	parent->remove(this);
 }
 
 inline class point object::transform(const class point& p)
@@ -91,8 +100,8 @@ inline void object::show(void)
 		showDotLine(transform(), transform(point(0, display, 0)), 0x00FF00);
 		showDotLine(transform(), transform(point(0, 0, display)), 0x0000FF);
 	}
-	for (std::vector<class object *>::size_type i = 0; i != obj.size(); i++)
-		obj[i]->show();
+	for (std::list<class object *>::iterator it = obj.begin(); it != obj.end(); it++)
+		(*it)->show();
 	paint();
 }
 

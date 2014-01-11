@@ -6,12 +6,7 @@
 #include <inttypes.h>
 #include <TFT/tft.h>
 #include <TFT/conv.h>
-#include <Graphic/object.h>
-#include <Graphic/scrbuff.h>
-#include <Graphic/cubeframe.h>
-#include <Graphic/string.h>
-#include <Graphic/sphere.h>
-#include <Graphic/sphereframe.h>
+#include <Graphic/shapes.h>
 #include <time.h>
 
 #define PICS	"/mnt/NFS/files/capture/"
@@ -44,11 +39,13 @@ int main(void)
 	(new gString(subAxis, point(0, 30, 0), angle(0, 0, 1.57079), 0x66CCFF, "Hello, world!"))->showAxis(100);
 
 	class sphere *sph = new sphere(0, point(0, 0, 0), 50, 0x66CCFF);
-	class gString *str = new gString(0, point(-100, 80, 0), angle(0, 0, 0), 0x66CCFF, "Hello, world!", 4);
-	(new sphereFrame(str, point(-10, 40, 0), 20, 0xFF0000))->showAxis(150);
-	(new sphereFrame(str, point(-10, -8, 0), 20, 0x0000FF))->showAxis(150);
+	class gString *str = new gString(0, point(-94, 60, 0), angle(0, 0, 0), 0x66CCFF, "Hello, world!", 4);
+	(new sphereFrame(str, point(-20, 40, 0), 20, 0xFF0000))->showAxis(150);
+	(new sphereFrame(str, point(-20, -8, 0), 20, 0x0000FF))->showAxis(150);
+	(new sphereFrame(str, point(210, 40, 0), 20, 0xFFFF00))->showAxis(150);
+	(new sphereFrame(str, point(210, -8, 0), 20, 0x00FF00))->showAxis(150);
 	class cubeFrame *cube;
-	(new cubeFrame((new cubeFrame((new cubeFrame((cube = new cubeFrame((new cubeFrame((new cubeFrame(0, \
+	(new cubeFrame((new cubeFrame((cube = new cubeFrame((new cubeFrame((new cubeFrame((new cubeFrame(0, \
 			point(10, 10, 10), point(-10, -10, -10), 0xFF0000))->showAxis(50), \
 			point(10, 10, 10), point(-10, -10, -10), 0x00FF00))->showAxis(50), \
 			point(10, 10, 10), point(-10, -10, -10), 0x0000FF))->showAxis(50), \
@@ -71,10 +68,28 @@ int main(void)
 		sprintf(path, PICS "%06d.bmp", i++);
 		scr::scrCapture(path);*/
 		tft.update();
-		subAxis->setA(angle(subAxis->a().x() - 0.1, subAxis->a().y() - 0.1, subAxis->a().z() - 0.1));
 		gAxis->setA(angle(0.5, gAxis->a().y() + 0.05, 0));
+		if (gAxis->a().y() > 2 * PI)
+			gAxis->setA(0.5);
+		if (subAxis != NULL) {
+			subAxis->setA(angle(subAxis->a().x() + 0.1, subAxis->a().y() + 0.1, subAxis->a().z() + 0.1));
+			if (subAxis->a().x() > 4 * PI) {
+				//subAxis->setA();
+				delete subAxis;
+				subAxis = NULL;
+			}
+		}
 		str->setA(angle(str->a().x() + 0.05, 0, 0));
-		cube->setA(angle(0, 0, cube->a().z() + 0.05));
+		if (str->a().x() > 2 * PI)
+			str->setA();
+		if (cube != NULL) {
+			cube->setA(angle(0, 0, cube->a().z() + 0.05));
+			if (cube->a().z() > 4 * PI) {
+				//cube->setA();
+				delete cube;
+				cube = NULL;
+			}
+		}
 		//cube->setColour(rand() % 0x1000000);
 		//str->setColour(rand() % 0x1000000);
 		sph->setColour(rand() % 0x1000000);

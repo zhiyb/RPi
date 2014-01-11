@@ -1,7 +1,7 @@
 #ifndef __SPHERE_H
 #define __SPHERE_H
 
-#include <vector>
+#include <list>
 #include "basic.h"
 #include "object.h"
 #include "circle.h"
@@ -15,7 +15,7 @@ public:
 
 private:
 	float radius;
-	std::vector<class circle *> circles;
+	std::list<class circle *> circles;
 };
 
 inline sphere::sphere(class object *parent, const class point p, const float r, const uint32_t c): object(parent)
@@ -28,15 +28,17 @@ inline void sphere::set(const class point p, const float r, const uint32_t c)
 	radius = r;
 	colour = c;
 	setTPoint(p);
-	float d = PI / 12;	//1 / r;
+	while (!circles.empty())
+		circles.pop_back();
+	float d = PI / 2;	//1 / r;
 	for (float i = 0; i < PI; i += d)
-		circles.push_back(new circle(this, point(), angle(0, i, 0), r, c));
+		circles.push_back(new circle(this, point(), angle(0, i, 0), r, true, c));
 }
 
 inline void sphere::setColour(const uint32_t c)
 {
-	for (std::vector<class circle *>::size_type i = 0; i != circles.size(); i++)
-		circles[i]->setColour(c);
+	for (std::list<class circle *>::iterator it = circles.begin(); it != circles.end(); it++)
+		(*it)->setColour(c);
 }
 
 #endif

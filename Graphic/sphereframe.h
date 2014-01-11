@@ -30,22 +30,22 @@ inline void sphereFrame::set(const class point p, const float r, const uint32_t 
 	radius = r;
 	colour = c;
 	setTPoint(p);
-	frame[0]->set(point(), angle(0, PI * 0 / 6, 0), r, c);
-	frame[1]->set(point(), angle(0, PI * 1 / 6, 0), r, c);
-	frame[2]->set(point(), angle(0, PI * 2 / 6, 0), r, c);
-	frame[3]->set(point(), angle(0, PI * 3 / 6, 0), r, c);
-	frame[4]->set(point(), angle(0, PI * 4 / 6, 0), r, c);
-	frame[5]->set(point(), angle(0, PI * 5 / 6, 0), r, c);
-	frame[6]->set(point(), angle(PI * 1 / 6, 0, 0), r, c);
-	frame[7]->set(point(), angle(PI * 2 / 6, 0, 0), r, c);
-	frame[8]->set(point(), angle(PI * 3 / 6, 0, 0), r, c);
-	frame[9]->set(point(), angle(PI * 4 / 6, 0, 0), r, c);
-	frame[10]->set(point(), angle(PI * 5 / 6, 0, 0), r, c);
-	frame[11]->set(point(), angle(PI / 2, PI * 1 / 6, 0), r, c);
-	frame[12]->set(point(), angle(PI / 2, PI * 2 / 6, 0), r, c);
-	frame[13]->set(point(), angle(PI / 2, PI * 3 / 6, 0), r, c);
-	frame[14]->set(point(), angle(PI / 2, PI * 4 / 6, 0), r, c);
-	frame[15]->set(point(), angle(PI / 2, PI * 5 / 6, 0), r, c);
+	frame[0]->set(point(), angle(0, PI * 0 / 6, 0), r, false, c);
+	frame[1]->set(point(), angle(0, PI * 1 / 6, 0), r, false, c);
+	frame[2]->set(point(), angle(0, PI * 2 / 6, 0), r, false, c);
+	frame[3]->set(point(), angle(0, PI * 3 / 6, 0), r, false, c);
+	frame[4]->set(point(), angle(0, PI * 4 / 6, 0), r, false, c);
+	frame[5]->set(point(), angle(0, PI * 5 / 6, 0), r, false, c);
+	frame[6]->set(point(), angle(PI * 1 / 6, 0, 0), r, false, c);
+	frame[7]->set(point(), angle(PI * 2 / 6, 0, 0), r, false, c);
+	frame[8]->set(point(), angle(PI * 3 / 6, 0, 0), r, false, c);
+	frame[9]->set(point(), angle(PI * 4 / 6, 0, 0), r, false, c);
+	frame[10]->set(point(), angle(PI * 5 / 6, 0, 0), r, false, c);
+	frame[11]->set(point(), angle(PI / 2, PI * 1 / 6, 0), false, r, c);
+	frame[12]->set(point(), angle(PI / 2, PI * 2 / 6, 0), false, r, c);
+	frame[13]->set(point(), angle(PI / 2, PI * 3 / 6, 0), false, r, c);
+	frame[14]->set(point(), angle(PI / 2, PI * 4 / 6, 0), false, r, c);
+	frame[15]->set(point(), angle(PI / 2, PI * 5 / 6, 0), false, r, c);
 }
 
 inline void sphereFrame::setColour(const uint32_t c)

@@ -8,24 +8,26 @@
 class circle: public object
 {
 public:
-	inline circle(class object *parent = 0, const class point p = point(), const class angle a = angle(), const float r = 0, const uint32_t c = 0);
-	inline void set(const class point p = point(), const class angle a = angle(), const float r = 0, const uint32_t c = 0);
+	inline circle(class object *parent = 0, const class point p = point(), const class angle a = angle(), const float r = 0, const bool f = false, const uint32_t c = 0);
+	inline void set(const class point p = point(), const class angle a = angle(), const float r = 0, const bool f = false, const uint32_t c = 0);
 	inline void paint(void);
 
 private:
+	bool fill;
 	float radius;
 };
 
 #include <math.h>
 
-inline circle::circle(class object *parent, const class point p, const class angle a, const float r, const uint32_t c): object(parent)
+inline circle::circle(class object *parent, const class point p, const class angle a, const float r, const bool f, const uint32_t c): object(parent)
 {
-	set(p, a, r, c);
+	set(p, a, r, f, c);
 }
 
-inline void circle::set(const class point p, const class angle a, const float r, const uint32_t c)
+inline void circle::set(const class point p, const class angle a, const float r, const bool f, const uint32_t c)
 {
 	radius = r;
+	fill = f;
 	setColour(c);
 	setTPoint(p);
 	setTAngle(a);
@@ -36,14 +38,25 @@ inline void circle::paint(void)
 	using namespace scr;
 	float x = radius, y = 0;
 	while (y / x < tan(3.1415926535 / 4)) {
-		showPoint(transform(point(x, y, 0)), c());
-		showPoint(transform(point(x, -y, 0)), c());
-		showPoint(transform(point(-x, y, 0)), c());
-		showPoint(transform(point(-x, -y, 0)), c());
-		showPoint(transform(point(y, x, 0)), c());
-		showPoint(transform(point(y, -x, 0)), c());
-		showPoint(transform(point(-y, x, 0)), c());
-		showPoint(transform(point(-y, -x, 0)), c());
+		if (fill) {
+			showLine(transform(p()), transform(point(x, y, 0)), c());
+			showLine(transform(p()), transform(point(x, -y, 0)), c());
+			showLine(transform(p()), transform(point(-x, y, 0)), c());
+			showLine(transform(p()), transform(point(-x, -y, 0)), c());
+			showLine(transform(p()), transform(point(y, x, 0)), c());
+			showLine(transform(p()), transform(point(y, -x, 0)), c());
+			showLine(transform(p()), transform(point(-y, x, 0)), c());
+			showLine(transform(p()), transform(point(-y, -x, 0)), c());
+		} else {
+			showPoint(transform(point(x, y, 0)), c());
+			showPoint(transform(point(x, -y, 0)), c());
+			showPoint(transform(point(-x, y, 0)), c());
+			showPoint(transform(point(-x, -y, 0)), c());
+			showPoint(transform(point(y, x, 0)), c());
+			showPoint(transform(point(y, -x, 0)), c());
+			showPoint(transform(point(-y, x, 0)), c());
+			showPoint(transform(point(-y, -x, 0)), c());
+		}
 		y += 1;
 		x = sqrt(radius * radius - y * y);
 	}
