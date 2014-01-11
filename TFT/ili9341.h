@@ -4,21 +4,41 @@
 #include "gpio.h"
 #include <unistd.h>
 
-#define TFT_CS	PIN(7)	// Chip-select (0)
-#define TFT_BLC	PIN(11)	// Background light control (0)
-#define TFT_RST	PIN(13)	// Reset (0)
-#define TFT_WR	PIN(15)	// Parallel data write strobe (Rising)
-#define TFT_RS	PIN(19)	// Data(1) / Command(0) selection
-#define TFT_RD	PIN(21)	// Parallel data read strobe (Rising)
+// Control pin
+#define TFT_CS		PIN(7)		// Chip-select (0)
+#define TFT_BLC		PIN(11)		// Background light control (0)
+#define TFT_RST		PIN(13)		// Reset (0)
+#define TFT_WR		PIN(15)		// Parallel data write strobe (Rising)
+#define TFT_RS		PIN(19)		// Data(1) / Command(0) selection
+#define TFT_RD		PIN(21)		// Parallel data read strobe (Rising)
 
-#define TFT_D0	PIN(12)	// Data pin 0
-#define TFT_D1	PIN(16)	// Data pin 1
-#define TFT_D2	PIN(18)	// Data pin 2
-#define TFT_D3	PIN(22)	// Data pin 3
-#define TFT_D4	PIN(24)	// Data pin 4
-#define TFT_D5	PIN(26)	// Data pin 5
-#define TFT_D6	PIN(3)	// Data pin 6
-#define TFT_D7	PIN(5)	// Data pin 7
+// Control pin masks
+#define TFT_MCS		PINM(7)		// Chip-select (0)
+#define TFT_MBLC	PINM(11)	// Background light control (0)
+#define TFT_MRST	PINM(13)	// Reset (0)
+#define TFT_MWR		PINM(15)	// Parallel data write strobe (Rising)
+#define TFT_MRS		PINM(19)	// Data(1) / Command(0) selection
+#define TFT_MRD		PINM(21)	// Parallel data read strobe (Rising)
+
+// Data pin
+#define TFT_D0		PIN(12)		// Data pin 0
+#define TFT_D1		PIN(16)		// Data pin 1
+#define TFT_D2		PIN(18)		// Data pin 2
+#define TFT_D3		PIN(22)		// Data pin 3
+#define TFT_D4		PIN(24)		// Data pin 4
+#define TFT_D5		PIN(26)		// Data pin 5
+#define TFT_D6		PIN(3)		// Data pin 6
+#define TFT_D7		PIN(5)		// Data pin 7
+
+// Data pin masks
+#define TFT_MD0		PINM(12)	// Data pin 0
+#define TFT_MD1		PINM(16)	// Data pin 1
+#define TFT_MD2		PINM(18)	// Data pin 2
+#define TFT_MD3		PINM(22)	// Data pin 3
+#define TFT_MD4		PINM(24)	// Data pin 4
+#define TFT_MD5		PINM(26)	// Data pin 5
+#define TFT_MD6		PINM(3)		// Data pin 6
+#define TFT_MD7		PINM(5)		// Data pin 7
 
 // 8-bit parallel interface I
 
@@ -80,31 +100,29 @@ inline void ili9341::_setOrient(uint8_t o)
 
 inline void ili9341::cmd(uint8_t dat)
 {
-	GPIO_CLR(TFT_RS);
-	GPIO_WRITE(TFT_D0, dat & (1 << 0));
-	GPIO_WRITE(TFT_D1, dat & (1 << 1));
-	GPIO_WRITE(TFT_D2, dat & (1 << 2));
-	GPIO_WRITE(TFT_D3, dat & (1 << 3));
-	GPIO_WRITE(TFT_D4, dat & (1 << 4));
-	GPIO_WRITE(TFT_D5, dat & (1 << 5));
-	GPIO_WRITE(TFT_D6, dat & (1 << 6));
-	GPIO_WRITE(TFT_D7, dat & (1 << 7));
-	GPIO_CLR(TFT_WR);
-	GPIO_SET(TFT_WR);
-	GPIO_SET(TFT_RS);
+	uint32_t value = ((dat & (1 << 0)) ? TFT_MD0 : 0) | \
+			((dat & (1 << 1)) ? TFT_MD1 : 0) | \
+			((dat & (1 << 2)) ? TFT_MD2 : 0) | \
+			((dat & (1 << 3)) ? TFT_MD3 : 0) | \
+			((dat & (1 << 4)) ? TFT_MD4 : 0) | \
+			((dat & (1 << 5)) ? TFT_MD5 : 0) | \
+			((dat & (1 << 6)) ? TFT_MD6 : 0) | \
+			((dat & (1 << 7)) ? TFT_MD7 : 0);
+	GPIO_WRITE_MULTI(value, TFT_MD0 | TFT_MD1 | TFT_MD2 | TFT_MD3 | TFT_MD4 | TFT_MD5 | TFT_MD6 | TFT_MD7 | TFT_MRS | TFT_MWR);
+	GPIO_SET_MULTI(TFT_MWR | TFT_MRS);
 }
 
 inline void ili9341::data(uint8_t dat)
 {
-	GPIO_WRITE(TFT_D0, dat & (1 << 0));
-	GPIO_WRITE(TFT_D1, dat & (1 << 1));
-	GPIO_WRITE(TFT_D2, dat & (1 << 2));
-	GPIO_WRITE(TFT_D3, dat & (1 << 3));
-	GPIO_WRITE(TFT_D4, dat & (1 << 4));
-	GPIO_WRITE(TFT_D5, dat & (1 << 5));
-	GPIO_WRITE(TFT_D6, dat & (1 << 6));
-	GPIO_WRITE(TFT_D7, dat & (1 << 7));
-	GPIO_CLR(TFT_WR);
+	uint32_t value = ((dat & (1 << 0)) ? TFT_MD0 : 0) | \
+			((dat & (1 << 1)) ? TFT_MD1 : 0) | \
+			((dat & (1 << 2)) ? TFT_MD2 : 0) | \
+			((dat & (1 << 3)) ? TFT_MD3 : 0) | \
+			((dat & (1 << 4)) ? TFT_MD4 : 0) | \
+			((dat & (1 << 5)) ? TFT_MD5 : 0) | \
+			((dat & (1 << 6)) ? TFT_MD6 : 0) | \
+			((dat & (1 << 7)) ? TFT_MD7 : 0);
+	GPIO_WRITE_MULTI(value, TFT_MD0 | TFT_MD1 | TFT_MD2 | TFT_MD3 | TFT_MD4 | TFT_MD5 | TFT_MD6 | TFT_MD7 | TFT_MWR);
 	GPIO_SET(TFT_WR);
 }
 

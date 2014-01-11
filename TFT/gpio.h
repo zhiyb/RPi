@@ -17,6 +17,8 @@
 #define RPI_V2_GPIO_P1_9	 RPI_V2_GPIO_P1_09
 
 #define PIN(pin)		RPI_V2_GPIO_P1_ ## pin
+#define _BV(p)			(1 << p)
+#define PINM(p)			(_BV(PIN(p)))
 
 #define GPIO_PUD_UP(pin)	bcm2835_gpio_set_pud(pin, \
 		BCM2835_GPIO_PUD_UP)
@@ -31,13 +33,11 @@
 		BCM2835_GPIO_FSEL_OUTP)
 #define GPIO_READ(pin)		bcm2835_gpio_lev(pin)
 #define GPIO_SET(pin)		bcm2835_gpio_set(pin)
+#define GPIO_SET_MULTI(mask)	bcm2835_gpio_set_multi(mask)
 #define GPIO_CLR(pin)		bcm2835_gpio_clr(pin)
-#define GPIO_WRITE(pin, e)	do \
-	if (e) \
-		GPIO_SET(pin); \
-	else \
-		GPIO_CLR(pin); \
-while (0)
+#define GPIO_CLR_MULTI(mask)	bcm2835_gpio_clr_multi(mask)
+#define GPIO_WRITE(pin, e)	bcm2835_gpio_write(pin, e)
+#define GPIO_WRITE_MULTI(value, mask)	bcm2835_gpio_write_mask(value, mask)
 
 #define gpio_init() do \
 	if (!bcm2835_init()) { \

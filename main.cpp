@@ -10,6 +10,7 @@
 #include <Graphic/scrbuff.h>
 #include <Graphic/cubeframe.h>
 #include <Graphic/string.h>
+#include <Graphic/sphere.h>
 #include <Graphic/sphereframe.h>
 #include <time.h>
 
@@ -42,10 +43,10 @@ int main(void)
 	(new cubeFrame(subAxis, point(30, 30, 30), point(-60, -60, -60), 0x3F3F3F))->showAxis(100);
 	(new gString(subAxis, point(0, 30, 0), angle(0, 0, 1.57079), 0x66CCFF, "Hello, world!"))->showAxis(100);
 
-	class sphereFrame *sphere = new sphereFrame(0, point(0, 0, 0), 50, 0x66CCFF);
+	class sphere *sph = new sphere(0, point(0, 0, 0), 50, 0x66CCFF);
 	class gString *str = new gString(0, point(-100, 80, 0), angle(0, 0, 0), 0x66CCFF, "Hello, world!", 4);
-	(new sphereFrame(str, point(-10, 40, 0), 10, 0xFF0000))->showAxis(150);
-	(new sphereFrame(str, point(-10, -8, 0), 10, 0x0000FF))->showAxis(150);
+	(new sphereFrame(str, point(-10, 40, 0), 20, 0xFF0000))->showAxis(150);
+	(new sphereFrame(str, point(-10, -8, 0), 20, 0x0000FF))->showAxis(150);
 	class cubeFrame *cube;
 	(new cubeFrame((new cubeFrame((new cubeFrame((cube = new cubeFrame((new cubeFrame((new cubeFrame(0, \
 			point(10, 10, 10), point(-10, -10, -10), 0xFF0000))->showAxis(50), \
@@ -54,9 +55,9 @@ int main(void)
 			point(10, 10, 10), point(-10, -10, -10), 0xFFFF00))->showAxis(50), \
 			point(10, 10, 10), point(-10, -10, -10), 0x00FFFF))->showAxis(50), \
 			point(10, 10, 10), point(-10, -10, -10), 0xFF00FF))->showAxis(50);
-	gAxis->setTPoint(point(160, 120, -500));
+	gAxis->set(point(160, 120, -500), angle(0.5));
 	gAxis->showAxis(0);
-	sphere->showAxis(150);
+	sph->showAxis(150);
 	str->showAxis(150);
 	//int i = 0;
 	while (true) {
@@ -76,7 +77,7 @@ int main(void)
 		cube->setA(angle(0, 0, cube->a().z() + 0.05));
 		//cube->setColour(rand() % 0x1000000);
 		//str->setColour(rand() % 0x1000000);
-		sphere->setColour(rand() % 0x1000000);
+		sph->setColour(rand() % 0x1000000);
 		//gRoot->setColour(rand() % 0x1000000);
 		//usleep(100);
 	}
