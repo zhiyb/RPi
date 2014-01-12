@@ -5,7 +5,7 @@
 #include "basic.h"
 #include <list>
 #define PI		3.141592653589793
-#define CIRCLE_STEP	0.8
+#define CIRCLE_STEP	1
 
 class circle: public object
 {
