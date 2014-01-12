@@ -4,22 +4,21 @@
 #include "object.h"
 #include "basic.h"
 #include <list>
-#define PI		(3.141592653589793)
-#define CIRCLE_STEP	0.25
+#define PI		3.141592653589793
+#define CIRCLE_STEP	0.8
 
 class circle: public object
 {
 public:
 	inline circle(class object *parent = 0, const class point p = point(), const class angle a = angle(), const float r = 0, const bool f = false, const uint32_t c = 0);
 	inline void set(const class point p = point(), const class angle a = angle(), const float r = 0, const bool f = false, const uint32_t c = 0);
-	inline void setColour(const uint32_t c = 0);
 
 protected:
 	inline void paint(void);
 
 private:
+	bool fill;
 	float radius;
-	std::list<class circle *> circles;
 };
 
 #include <math.h>
@@ -31,38 +30,38 @@ inline circle::circle(class object *parent, const class point p, const class ang
 
 inline void circle::set(const class point p, const class angle a, const float r, const bool f, const uint32_t c)
 {
+	fill = f;
 	radius = r;
 	setColour(c);
 	setTPoint(p);
 	setTAngle(a);
-	while (!circles.empty())
-		circles.pop_back();
-	if (f)
-		for (float r = radius; r > CIRCLE_STEP; r -= CIRCLE_STEP)
-			circles.push_back(new circle(this, point(), angle(), r, false, c));
-}
-
-inline void circle::setColour(const uint32_t c)
-{
-	colour = c;
-	for (std::list<class circle *>::iterator it = circles.begin(); it != circles.end(); it++)
-		(*it)->setColour(c);
 }
 
 inline void circle::paint(void)
 {
 	using namespace scr;
 	float x = radius, y = 0;
-	while (y / x < tan(3.1415926535 / 4)) {
-		drawPoint(transform(point(x, y, 0)), c());
-		drawPoint(transform(point(x, -y, 0)), c());
-		drawPoint(transform(point(-x, y, 0)), c());
-		drawPoint(transform(point(-x, -y, 0)), c());
-		drawPoint(transform(point(y, x, 0)), c());
-		drawPoint(transform(point(y, -x, 0)), c());
-		drawPoint(transform(point(-y, x, 0)), c());
-		drawPoint(transform(point(-y, -x, 0)), c());
-		y += 1;
+	while (y / x < 1) {
+		if (fill) {
+			drawLine(transform(point(x, y)), transform(point(-x, y)), c());
+			drawLine(transform(point(x, -y)), transform(point(-x, -y)), c());
+			drawLine(transform(point(y, x)), transform(point(-y, x)), c());
+			drawLine(transform(point(y, -x)), transform(point(-y, -x)), c());
+			drawLine(transform(point(x, y)), transform(point(-x, -y)), c());
+			drawLine(transform(point(x, -y)), transform(point(-x, y)), c());
+			drawLine(transform(point(y, x)), transform(point(-y, -x)), c());
+			drawLine(transform(point(y, -x)), transform(point(-y, x)), c());
+		} else {
+			drawPoint(transform(point(x, y)), c());
+			drawPoint(transform(point(x, -y)), c());
+			drawPoint(transform(point(-x, y)), c());
+			drawPoint(transform(point(-x, -y)), c());
+			drawPoint(transform(point(y, x)), c());
+			drawPoint(transform(point(y, -x)), c());
+			drawPoint(transform(point(-y, x)), c());
+			drawPoint(transform(point(-y, -x)), c());
+		}
+		y += CIRCLE_STEP;
 		x = sqrt(radius * radius - y * y);
 	}
 }

@@ -391,12 +391,13 @@ inline void tfthw::update(void)
 
 static inline void *tftUpdateThread(void *arg)
 {
+	usleep(50000);
 	while (1) {
 		if (!scrBuffLock) {
 			scrBuffLock = true;
 			tft.update();
 			scrBuffLock = false;
-			usleep(60000);
+			usleep(50000);
 		} else
 			usleep(1000);
 	}

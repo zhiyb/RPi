@@ -37,7 +37,7 @@ inline void sphere::paint(void)
 {
 	class point center = transform(), r = transform(point(radius, 0, 0));
 	float radius = (center - r).length();
-	scr::drawSphere(center, point(radius, 0, radius), true, c());
+	scr::drawSphere(center, radius, c());
 }
 
 #endif

@@ -95,14 +95,12 @@ inline void object::show(void)
 			usleep(1000);
 		scrBuffLock = true;
 		for (int x = 0; x < SCRW; x++)
-			for (int y = 0; y < SCRH; y++)
-				scrBuff[x][y].buff = scrBuff[x][y].colour;
-		scrBuffLock = false;
-		for (int x = 0; x < SCRW; x++)
 			for (int y = 0; y < SCRH; y++) {
 				scrBuff[x][y].deep = 1;
+				scrBuff[x][y].buff = scrBuff[x][y].colour;
 				scrBuff[x][y].colour = colour;
-			}
+		}
+		scrBuffLock = false;
 	}
 	if (display > 1) {
 		drawDotLine(transform(), transform(point(display, 0, 0)), 0xFF0000);

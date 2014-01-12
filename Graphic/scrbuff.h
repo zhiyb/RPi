@@ -19,7 +19,8 @@ namespace scr {
 	static inline void drawPoint(const class point& p, const uint32_t c);
 	static inline void drawLine(const class point& p1, const class point& p2, const uint32_t c);
 	static inline void drawDotLine(const class point& p1, const class point& p2, const uint32_t c);
-	static inline void drawSphere(const class point& center, const class point& r, const bool fill, const uint32_t c);
+	static inline void drawSphereLine(const class point& l, const class point& r, const uint32_t c, const float radius, const class point& center);
+	static inline void drawSphere(const class point& center, const float radius, const uint32_t c);
 	void scrCapture(const char *path);
 }
 
@@ -84,16 +85,39 @@ inline void scr::drawDotLine(const class point& p1, const class point& p2, const
 	drawPoint(p2, c);
 }
 
-static inline void scr::drawSphere(const class point& center, const class point& r, const bool fill, const uint32_t c)
+inline void scr::drawSphereLine(const class point& l, const class point& r, const uint32_t c, const float radius, const class point& center)
 {
+	float dx = r.x() - l.x(), dy = r.y() - l.y();
+	float dmax = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+	for (float i = 0; i < dmax + 0.75; i += 0.75) {
+		class point coord(point(dx * i / dmax, dy * i / dmax) + l);
+		float dz = radius * radius - coord.x() * coord.x() - coord.y() * coord.y();
+		dz = dz < 0 ? 0 : sqrt(dz);
+		drawPoint(center + coord + point(0, 0, dz), c);
+		drawPoint(center + coord - point(0, 0, dz), c);
+	}
+}
+
+static inline void scr::drawSphere(const class point& center, const float radius, const uint32_t c)
+{
+#if 1
+	float x = radius, y = 0;
+	while (y / x < 1) {
+		drawSphereLine(point(x, +y), point(-x, +y), c, radius, center);
+		drawSphereLine(point(x, -y), point(-x, -y), c, radius, center);
+		drawSphereLine(point(y, +x), point(-y, +x), c, radius, center);
+		drawSphereLine(point(y, -x), point(-y, -x), c, radius, center);
+		y += 1;
+		x = sqrt(radius * radius - y * y);
+	}
+#else
 	float radius = r.x();
 	if (radius < CIRCLE_STEP) {
 		drawPoint(center + point(0, 0, r.z()), c);
 		drawPoint(center - point(0, 0, r.z()), c);
 		return;
 	}
-	if (fill)
-		drawSphere(center, point(radius - CIRCLE_STEP, sqrt(r.z() * r.z() - (radius - CIRCLE_STEP) * (radius - CIRCLE_STEP)), r.z()), true, c);
+	drawSphere(center, point(radius - CIRCLE_STEP, sqrt(r.z() * r.z() - (radius - CIRCLE_STEP) * (radius - CIRCLE_STEP)), r.z()), c);
 	float x = radius, y = 0;
 	while (y / x < tan(3.1415926535 / 4) + 0.2) {
 		drawPoint(center + point(x, y, r.y()), c);
@@ -115,6 +139,7 @@ static inline void scr::drawSphere(const class point& center, const class point&
 		y += 1;
 		x = sqrt(radius * radius - y * y);
 	}
+#endif
 }
 
 #endif
