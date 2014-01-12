@@ -41,11 +41,11 @@ inline void sphereFrame::set(const class point p, const float r, const uint32_t 
 	frame[8]->set(point(), angle(PI * 3 / 6, 0, 0), r, false, c);
 	frame[9]->set(point(), angle(PI * 4 / 6, 0, 0), r, false, c);
 	frame[10]->set(point(), angle(PI * 5 / 6, 0, 0), r, false, c);
-	frame[11]->set(point(), angle(PI / 2, PI * 1 / 6, 0), false, r, c);
-	frame[12]->set(point(), angle(PI / 2, PI * 2 / 6, 0), false, r, c);
-	frame[13]->set(point(), angle(PI / 2, PI * 3 / 6, 0), false, r, c);
-	frame[14]->set(point(), angle(PI / 2, PI * 4 / 6, 0), false, r, c);
-	frame[15]->set(point(), angle(PI / 2, PI * 5 / 6, 0), false, r, c);
+	frame[11]->set(point(), angle(PI / 2, PI * 1 / 6, 0), r, false, c);
+	frame[12]->set(point(), angle(PI / 2, PI * 2 / 6, 0), r, false, c);
+	frame[13]->set(point(), angle(PI / 2, PI * 3 / 6, 0), r, false, c);
+	frame[14]->set(point(), angle(PI / 2, PI * 4 / 6, 0), r, false, c);
+	frame[15]->set(point(), angle(PI / 2, PI * 5 / 6, 0), r, false, c);
 }
 
 inline void sphereFrame::setColour(const uint32_t c)

@@ -8,7 +8,7 @@ PREFIX	:= arm-linux-gnueabihf-
 CC	:= $(PREFIX)g++
 STRIP	+= && $(PREFIX)strip
 CFLAGS	:= -g -I. -I./Graphic -I./TFT -Wall -Wsign-compare -Werror -O3
-LDFLAGS	:= -g -L./Graphic -lGraphic -L./TFT -lTFT -lbcm2835
+LDFLAGS	:= -g -L./Graphic -lGraphic -L./TFT -lTFT -lbcm2835 -lpthread
 
 .PHONE: all
 all: $(TARGET)

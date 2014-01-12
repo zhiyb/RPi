@@ -383,10 +383,24 @@ inline void tfthw::update(void)
 	cmd(0x2C);			// Memory Write
 	for (int y = SCRH - 1; y >= 0; y--)
 		for (int x = 0; x != SCRW; x++) {
-			uint16_t c = conv::c32to16(scrBuff[x][y].colour);
+			uint16_t c = conv::c32to16(scrBuff[x][y].buff);// & scrBuff[x][y].mask;
 			data(c / 0x0100);
 			data(c % 0x0100);
 		}
+}
+
+static inline void *tftUpdateThread(void *arg)
+{
+	while (1) {
+		if (!scrBuffLock) {
+			scrBuffLock = true;
+			tft.update();
+			scrBuffLock = false;
+			usleep(60000);
+		} else
+			usleep(1000);
+	}
+	return NULL;
 }
 
 #undef WIDTH

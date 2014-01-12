@@ -5,6 +5,8 @@
 
 namespace conv
 {
+	static inline uint16_t c16(uint8_t r, uint8_t g, uint8_t b);
+	static inline uint32_t c32(uint8_t r, uint8_t g, uint8_t b);
 	static inline uint16_t c16i(uint16_t c16);
 	static inline uint32_t c32i(uint32_t c32);
 	static inline uint16_t c32to16(uint32_t c32);
@@ -18,6 +20,16 @@ namespace conv
 }
 
 // Inline functions
+static inline uint16_t conv::c16(uint8_t r, uint8_t g, uint8_t b)
+{
+	return c32to16(c32(r, g, b));
+}
+
+static inline uint32_t conv::c32(uint8_t r, uint8_t g, uint8_t b)
+{
+	return ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+}
+
 static inline uint16_t conv::c16i(uint16_t c16)
 {
 	// 16-bit: rrrr rggg gggb bbbb

@@ -11,12 +11,15 @@ class sphere: public object
 public:
 	inline sphere(class object *parent = 0, const class point p = point(), const float r = 0, const uint32_t c = 0);
 	inline void set(const class point p = point(), const float r = 0, const uint32_t c = 0);
-	inline void setColour(const uint32_t c = 0);
+
+protected:
+	inline void paint(void);
 
 private:
 	float radius;
-	std::list<class circle *> circles;
 };
+
+#include "scrbuff.h"
 
 inline sphere::sphere(class object *parent, const class point p, const float r, const uint32_t c): object(parent)
 {
@@ -28,17 +31,13 @@ inline void sphere::set(const class point p, const float r, const uint32_t c)
 	radius = r;
 	colour = c;
 	setTPoint(p);
-	while (!circles.empty())
-		circles.pop_back();
-	float d = PI / 2;	//1 / r;
-	for (float i = 0; i < PI; i += d)
-		circles.push_back(new circle(this, point(), angle(0, i, 0), r, true, c));
 }
 
-inline void sphere::setColour(const uint32_t c)
+inline void sphere::paint(void)
 {
-	for (std::list<class circle *>::iterator it = circles.begin(); it != circles.end(); it++)
-		(*it)->setColour(c);
+	class point center = transform(), r = transform(point(radius, 0, 0));
+	float radius = (center - r).length();
+	scr::drawSphere(center, point(radius, 0, radius), true, c());
 }
 
 #endif

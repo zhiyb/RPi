@@ -10,6 +10,8 @@ public:
 	inline gString(class object *parent = 0, class point p = point(), class angle a = angle(), uint32_t c = 0, std::string s = 0, float z = 1);
 	inline void set(class point p = point(), class angle a = angle(), uint32_t c = 0, std::string s = 0, float z = 1);
 	inline void setString(const std::string& s) {str = s;}
+
+protected:
 	inline void paintChar(const char c, const int x);
 	inline void paint(void);
 
@@ -40,7 +42,7 @@ inline void gString::paintChar(const char c, const int x)
 	for (int dy = 0; dy < FONT_H * zoom; dy++)
 		for (int dx = 0; dx < FONT_W * zoom; dx++)
 			if (ascii[c - ' '][FONT_H - 1 - (int)(dy / zoom)] & (0x80 >> (int)(dx / zoom)))
-				showPoint(transform(point(x + dx, dy, 0)), colour);
+				drawPoint(transform(point(x + dx, dy, 0)), colour);
 }
 
 inline void gString::paint(void)

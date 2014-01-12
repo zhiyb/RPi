@@ -14,6 +14,8 @@ public:
 			const uint32_t c = 0);
 	inline void set(const class point p1, const class point p2, \
 			const uint32_t c);
+
+protected:
 	inline void paint(void);
 
 private:
@@ -36,7 +38,7 @@ inline void line::set(const class point p1, const class point p2, \
 
 inline void line::paint(void)
 {
-	scr::showLine(transform(0), transform(dir), c());
+	scr::drawLine(transform(0), transform(dir), c());
 }
 
 #endif

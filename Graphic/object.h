@@ -26,11 +26,11 @@ public:
 	virtual inline uint32_t c(void) const {return colour;}
 	virtual inline class point p(void) const {return tPoint;}
 	virtual inline class angle a(void) const {return tAngle;}
-	virtual inline void paint(void) {}
 
 protected:
 	virtual inline class point transform(const class point& p = point());
 	static inline class point convPoint(const class point& p = point(), const class angle& a = angle());
+	virtual inline void paint(void) {}
 
 	uint32_t colour;
 	float display;
@@ -46,6 +46,7 @@ extern class object *gRoot;
 extern class object *gAxis;
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <math.h>
 #include "scrbuff.h"
 
@@ -89,16 +90,24 @@ inline class point object::convPoint(const class point& p, const class angle& a)
 inline void object::show(void)
 {
 	using namespace scr;
-	if ((int)parent == -1)
+	if ((int)parent == -1) {
+		while (scrBuffLock)
+			usleep(1000);
+		scrBuffLock = true;
+		for (int x = 0; x < SCRW; x++)
+			for (int y = 0; y < SCRH; y++)
+				scrBuff[x][y].buff = scrBuff[x][y].colour;
+		scrBuffLock = false;
 		for (int x = 0; x < SCRW; x++)
 			for (int y = 0; y < SCRH; y++) {
 				scrBuff[x][y].deep = 1;
 				scrBuff[x][y].colour = colour;
 			}
+	}
 	if (display > 1) {
-		showDotLine(transform(), transform(point(display, 0, 0)), 0xFF0000);
-		showDotLine(transform(), transform(point(0, display, 0)), 0x00FF00);
-		showDotLine(transform(), transform(point(0, 0, display)), 0x0000FF);
+		drawDotLine(transform(), transform(point(display, 0, 0)), 0xFF0000);
+		drawDotLine(transform(), transform(point(0, display, 0)), 0x00FF00);
+		drawDotLine(transform(), transform(point(0, 0, display)), 0x0000FF);
 	}
 	for (std::list<class object *>::iterator it = obj.begin(); it != obj.end(); it++)
 		(*it)->show();
